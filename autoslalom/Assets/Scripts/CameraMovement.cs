@@ -1,43 +1,44 @@
 using UnityEngine;
-
-public class CameraMovement : MonoBehaviour, IGameSystems
+public class CameraMovement : MonoBehaviour
 {
-    private float defaultVelocity = 5f;
+    [SerializeField] private AnimationCurve stoppingCurve;
+    private float curveTimer;
     private float currentVelocity;
-    private float maximumVelocity = 10f;
-    private float acceleration = 0.01f;
-    private float deceleration;
-
-    void Start()
+    private float defaultVelocity = 13.5f;
+    private float maximumVelocity = 27f;
+    private float acceleration = 0.2f;
+    private void Start()
     {
-        GameSystems.Instance.Register(this);
-        EventBus.GameRestarted += SetDefault;
+        SetDefault();
+        EventBus.GameStarted += SetDefault;
+        EventBus.GameLeaved += SetDefault;
     }
-
-    void Update()
+    private void Update()
     {
         if (GameStateManager.Current == GameStates.Paused)
         {
             return;
         }
-        if (GameStateManager.Current == GameStates.Appearing ||
-            GameStateManager.Current == GameStates.Idle)
+        if (GameStateManager.Current == GameStates.Running)
         {
-            transform.position += Vector3.right * defaultVelocity * Time.deltaTime;
-        }
-        else if (GameStateManager.Current == GameStates.Running)
-        {
-            transform.position += Vector3.right * currentVelocity * Time.deltaTime;
-            if (currentVelocity <= maximumVelocity)
-                currentVelocity += acceleration;
+            if (currentVelocity < maximumVelocity)
+                currentVelocity += acceleration * Time.deltaTime;
         }
         else if (GameStateManager.Current == GameStates.Ended)
         {
-
+            currentVelocity -= stoppingCurve.Evaluate(curveTimer) * Time.deltaTime;
+            curveTimer += Time.deltaTime;
+            if (currentVelocity <= defaultVelocity)
+            {
+                EventBus.CameraStabilized?.Invoke();
+                SetDefault();
+            }
         }
+        transform.position += Vector3.right * currentVelocity * Time.deltaTime;
     }
     private void SetDefault()
     {
+        curveTimer = 0f;
         currentVelocity = defaultVelocity;
     }
 }

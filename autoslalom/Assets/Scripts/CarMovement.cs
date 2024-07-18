@@ -1,39 +1,33 @@
 using UnityEngine;
 
-public class CarMovement : MonoBehaviour, IGameSystems
+public class CarMovement : MonoBehaviour
 {
+    [SerializeField] private AnimationCurve appearingCurve;
+    [SerializeField] private AnimationCurve idleCurve;
     [SerializeField] private Transform topPoint;
     [SerializeField] private Transform middlePoint;
     [SerializeField] private Transform bottomPoint;
-    [SerializeField] private Transform currentPoint;
-
-    [SerializeField] private AnimationCurve idleCurve;
-    [SerializeField] private AnimationCurve appearingCurve;
-
+    private Transform currentPoint;
     private float curveTimer = 0f;
     private float appearingDuration;
-
     private Vector3 deathPosition;
-
     private bool keyUpIsUnprocessed;
     private bool keyDownIsUnprocessed;
     private void Start()
     {
         appearingDuration = appearingCurve.keys[appearingCurve.length - 1].time;
 
-        GameSystems.Instance.Register(this);
         EventBus.GameStarted += SetDefault;
-        EventBus.GameRestarted += SetDefault;
         EventBus.GameEnded += SetDeathPosition;
     }
     private void Update()
     {
         if (GameStateManager.Current != GameStates.Running)
             return;
-        if (Input.GetKeyDown(KeyCode.DownArrow))
-            keyDownIsUnprocessed = true;
-        if (Input.GetKeyDown(KeyCode.UpArrow))
+        if (Input.GetKeyDown(KeyCode.A))
             keyUpIsUnprocessed = true;
+        if (Input.GetKeyDown(KeyCode.D))
+            keyDownIsUnprocessed = true;
     }
     private void FixedUpdate()
     {

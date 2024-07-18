@@ -1,11 +1,11 @@
 using UnityEngine;
-
 public class Initializator : MonoBehaviour
 {
-    void Awake()
+    private void Awake()
     {
+        ScoreSaver.Initialize();
         EventBus.Initialize();
         GameStateManager.Initialize();
-        EventBus.GameOpened?.Invoke();
+        Destroy(gameObject);
     }
 }

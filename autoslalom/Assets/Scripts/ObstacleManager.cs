@@ -1,47 +1,48 @@
 using System.Collections.Generic;
 using UnityEngine;
-
-public class ObstacleManager : MonoBehaviour, IGameSystems
+public class ObstacleManager : MonoBehaviour
 {
-    [SerializeField] private Transform spawnPoint;
-    private float spawnPeriod = 10f;
-    private Vector3 lastSpawnPosition;
+    [SerializeField] private Transform obstacleStorage;
     private List<GameObject> disabledObstacles = new List<GameObject>();
     private List<GameObject> enabledObstacles = new List<GameObject>();
+    private Vector3 lastSpawnPosition;
+    private System.Random randomizer;
+    private float spawnPeriod = 12f;
     private void Start()
     {
-        GameSystems.Instance.Register(this);
         EventBus.CameraStabilized += () => Despawn(enabledObstacles);
-
-        foreach (Transform obstacle in transform)
+        EventBus.GameLeaved += () => Despawn(enabledObstacles);
+        EventBus.GameStarted += () => Despawn(enabledObstacles);
+        randomizer = new System.Random();
+        foreach (Transform obstacle in obstacleStorage)
             disabledObstacles.Add(obstacle.gameObject);
     }   
-    private void Update()
+    private void FixedUpdate()
     {
         if (GameStateManager.Current == GameStates.Running)
         {
-            if (spawnPoint.position.x - lastSpawnPosition.x >= spawnPeriod)
+            if (transform.position.x - lastSpawnPosition.x >= spawnPeriod)
             Spawn();
         }
     }
     private void Spawn()
     {
-        GameObject currentObstacle = disabledObstacles[Random.Range(0, disabledObstacles.Count)];
-        currentObstacle.SetActive(true);
+        GameObject currentObstacle = disabledObstacles[randomizer.Next(disabledObstacles.Count)];
         disabledObstacles.Remove(currentObstacle);
         enabledObstacles.Add(currentObstacle);
-        lastSpawnPosition = spawnPoint.position;
+        currentObstacle.SetActive(true);
+        lastSpawnPosition = transform.position;
         currentObstacle.transform.position = lastSpawnPosition;
     }
     private void Despawn(List<GameObject> obstacles)
     {
-        foreach(GameObject obstacle in obstacles)
-            Despawn(obstacle);
+        for (int i = obstacles.Count - 1; i >= 0; i--)
+            Despawn(obstacles[i]);
     }
     public void Despawn(GameObject obstacle)
     {
+        obstacle.SetActive(false);
         disabledObstacles.Add(obstacle);
         enabledObstacles.Remove(obstacle);
-        obstacle.SetActive(false);
     }
 }

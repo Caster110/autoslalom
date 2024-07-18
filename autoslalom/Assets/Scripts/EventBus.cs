@@ -1,5 +1,4 @@
 using System;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public static class EventBus
@@ -10,9 +9,9 @@ public static class EventBus
     public static Action GameStarted;
     public static Action GameContinued;
     public static Action GamePaused;
-    public static Action GameRestarted;
-    public static Action GameOpened;
+    public static Action GameLeaved;
     public static Action CameraStabilized;
     public static Action CarAppeared;
-    public static Action<int> ScoreIncreased;
+    public static Action <int> ResultGotten;
+    public static Action <string> PlayerGotten;
 }
