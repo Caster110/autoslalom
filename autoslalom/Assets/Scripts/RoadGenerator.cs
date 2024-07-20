@@ -1,5 +1,4 @@
 using UnityEngine;
-
 public class RoadGenerator : MonoBehaviour
 {
     [SerializeField] private Transform[] roadTiles;
@@ -21,6 +20,5 @@ public class RoadGenerator : MonoBehaviour
         {
             nextTileToSpawn = 0;
         }
-
     }
 }

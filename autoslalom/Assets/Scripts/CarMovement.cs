@@ -1,5 +1,4 @@
 using UnityEngine;
-
 public class CarMovement : MonoBehaviour
 {
     [SerializeField] private AnimationCurve appearingCurve;

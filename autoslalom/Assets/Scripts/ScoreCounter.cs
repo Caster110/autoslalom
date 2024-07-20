@@ -1,7 +1,7 @@
 using UnityEngine;
 public class ScoreCounter : MonoBehaviour
 {
-    private float distanceForPoint = 1f;
+    private int pointsForDistance = 100;
     private float startDistance;
     private void Start()
     {
@@ -15,7 +15,7 @@ public class ScoreCounter : MonoBehaviour
     private int CountResult()
     {
         float reachedDistance = transform.position.x;
-        int result = Mathf.RoundToInt((reachedDistance - startDistance)/distanceForPoint);
+        int result = Mathf.RoundToInt(reachedDistance - startDistance) * pointsForDistance;
         return result;
     }
     private void SendResult()

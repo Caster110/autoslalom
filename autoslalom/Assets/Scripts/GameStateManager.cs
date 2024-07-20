@@ -1,9 +1,8 @@
 using UnityEngine;
-
 public static class GameStateManager
 {
     public static GameStates Current { get; private set; }
-    static void ChooseState(GameStates state)
+    private static void ChooseState(GameStates state)
     {
         Current = state;
     }

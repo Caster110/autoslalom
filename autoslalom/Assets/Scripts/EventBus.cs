@@ -1,6 +1,5 @@
 using System;
 using UnityEngine;
-
 public static class EventBus
 {
     public static void Initialize() { Debug.Log("EventBus initialized"); }
