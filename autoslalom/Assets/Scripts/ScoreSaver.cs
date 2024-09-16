@@ -17,14 +17,14 @@ public static class ScoreSaver
         ReadFile();
     }
     public static void Initialize() { Debug.Log("ScoreSaver initialized"); }
+    private static void SetScore(int value)
+    {
+        score = value;
+    }
     private static void SetPlayer(string value) 
     {
         player = value;
         SaveScore();
-    }
-    private static void SetScore(int value)
-    {
-        score = value;
     }
     private static void SaveScore()
     {
@@ -44,7 +44,7 @@ public static class ScoreSaver
     }
     private static void SetRecord(int index, int score, string player)
     {
-        if (index + 1 <= 9)
+        if (index + 1 < amountOfRecords)
             records[index] = $"{index + 1}  | {player} -- {score}";
         else
             records[index] = $"{index + 1} | {player} -- {score}";
